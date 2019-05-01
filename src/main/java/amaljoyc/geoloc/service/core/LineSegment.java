@@ -1,5 +1,6 @@
 package amaljoyc.geoloc.service.core;
 
+import amaljoyc.geoloc.exception.IllegalLineSegmentException;
 import lombok.Data;
 
 import static java.lang.Math.max;
@@ -30,7 +31,15 @@ public class LineSegment {
         this.endPoint = endPoint;
     }
 
+    /**
+     *
+     * @param startPoint
+     * @param endPoint
+     * @return a new and fully built LineSegment
+     */
     public static LineSegment create(Point startPoint, Point endPoint) {
+        validateEndPoints(startPoint, endPoint);
+
         LineSegment lineSegment = new LineSegment(startPoint, endPoint);
 
         lineSegment.isVertical = startPoint.getXCoordinate() == endPoint.getXCoordinate();
@@ -45,10 +54,18 @@ public class LineSegment {
         return lineSegment;
     }
 
+    private static void validateEndPoints(Point startPoint, Point endPoint) {
+        if (startPoint.equals(endPoint)) {
+            throw new IllegalLineSegmentException();
+        }
+    }
+
     /**
      *
      * @param point
      * @return whether the given Point lies on the LineSegment or not
+     *              True  --> Point is ON LineSegment
+     *              False --> Point is NOT ON LineSegment
      */
     public boolean contains(Point point) {
         return isBetweenSegmentEndPoints(point) && isOnLine(point);
@@ -96,5 +113,9 @@ public class LineSegment {
             int value = (int) (leftOperand - rightOperand);
             return value == 0;
         }
+    }
+
+    public boolean isNotVertical() {
+        return !isVertical;
     }
 }

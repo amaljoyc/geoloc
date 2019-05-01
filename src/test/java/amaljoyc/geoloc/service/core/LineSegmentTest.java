@@ -1,5 +1,6 @@
 package amaljoyc.geoloc.service.core;
 
+import amaljoyc.geoloc.exception.IllegalLineSegmentException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -88,5 +89,12 @@ public class LineSegmentTest {
         LineSegment lineSegment = LineSegment.create(startPoint, endPoint);
 
         assertFalse(lineSegment.contains(testPoint));
+    }
+
+    @Test(expected = IllegalLineSegmentException.class)
+    public void testIllegalLineSegment() {
+        Point startPoint = new Point(1, 1);
+        Point endPoint = new Point(1, 1);
+        LineSegment.create(startPoint, endPoint);
     }
 }
