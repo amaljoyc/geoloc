@@ -55,4 +55,8 @@ public class PolygonDataStore {
             }
         });
     }
+
+    public List<PolygonData> getPolygons() {
+        return polygonDataCache;
+    }
 }
