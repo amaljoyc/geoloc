@@ -1,6 +1,5 @@
 package amaljoyc.geoloc.service.core;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import static java.lang.Math.max;
@@ -12,11 +11,39 @@ import static java.lang.Math.min;
  *  Represents a LineSegment with fixed start and end Points
  */
 @Data
-@AllArgsConstructor
 public class LineSegment {
 
     private Point startPoint;
     private Point endPoint;
+
+    private double slope; // `m = (y2 - y1) / (x2 - x1)` where m is the slope.
+    private double yIntercept; // `y = mx + b` where b is the y-intercept.
+
+    private boolean isVertical;
+    private boolean isHorizontal;
+
+    private LineSegment() {
+    }
+
+    private LineSegment(Point startPoint, Point endPoint) {
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+    }
+
+    public static LineSegment create(Point startPoint, Point endPoint) {
+        LineSegment lineSegment = new LineSegment(startPoint, endPoint);
+
+        lineSegment.isVertical = startPoint.getXCoordinate() == endPoint.getXCoordinate();
+        lineSegment.isHorizontal = startPoint.getYCoordinate() == endPoint.getYCoordinate();
+
+        if (!lineSegment.isVertical) { // for a vertical line, slope would be infinity, hence skipping.
+            lineSegment.slope = (endPoint.getYCoordinate() - startPoint.getYCoordinate()) /
+                    (endPoint.getXCoordinate() - startPoint.getXCoordinate());
+            lineSegment.yIntercept = startPoint.getYCoordinate() - (lineSegment.slope * startPoint.getXCoordinate());
+        }
+
+        return lineSegment;
+    }
 
     /**
      *
@@ -57,9 +84,9 @@ public class LineSegment {
      * ie, value = (𝑥−𝑥1)(𝑦2−𝑦1) − (𝑦−𝑦1)(𝑥2−𝑥1) and if value = 0 then the point lies exactly on the line.
      */
     private boolean isOnLine(Point point) {
-        if (isVertical()) {
+        if (isVertical) {
             return point.getXCoordinate() == startPoint.getXCoordinate();
-        } else if (isHorizontal()) {
+        } else if (isHorizontal) {
             return point.getYCoordinate() == startPoint.getYCoordinate();
         } else {
             double leftOperand = (point.getXCoordinate() - startPoint.getXCoordinate()) *
@@ -69,13 +96,5 @@ public class LineSegment {
             int value = (int) (leftOperand - rightOperand);
             return value == 0;
         }
-    }
-
-    private boolean isVertical() {
-        return startPoint.getXCoordinate() == endPoint.getXCoordinate();
-    }
-
-    private boolean isHorizontal() {
-        return startPoint.getYCoordinate() == endPoint.getYCoordinate();
     }
 }

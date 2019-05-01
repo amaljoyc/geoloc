@@ -25,6 +25,24 @@ public class Polygon {
 
     /**
      *
+     * @param vertices
+     * @return a new and fully built Polygon
+     */
+    public static Polygon create(List<Point> vertices) {
+        Polygon polygon = new Polygon();
+        polygon.vertices = vertices;
+
+        for (int i = 0; i < vertices.size() - 1; i++) {
+            LineSegment lineSegment = LineSegment.create(vertices.get(i), vertices.get(i + 1));
+            polygon.edges.add(lineSegment);
+            polygon.boundingBox.resizeAfterVertex(vertices.get(i));
+        }
+
+        return polygon;
+    }
+
+    /**
+     *
      * @param point
      * @return whether the given Point is inside the Polygon or not based on,
      *              1) if either count of intersections is odd
@@ -47,27 +65,9 @@ public class Polygon {
         return totalIntersections % 2 != 0; // count of intersections is odd
     }
 
-    /**
-     *
-     * @param vertices
-     * @return a new and fully built Polygon
-     */
-    public static Polygon build(List<Point> vertices) {
-        Polygon polygon = new Polygon();
-        polygon.vertices = vertices;
-
-        for (int i = 0; i < vertices.size() - 1; i++) {
-            LineSegment lineSegment = new LineSegment(vertices.get(i), vertices.get(i + 1));
-            polygon.edges.add(lineSegment);
-            polygon.boundingBox.resizeAfterVertex(vertices.get(i));
-        }
-
-        return polygon;
-    }
-
     private LineSegment castRay(Point startPoint) {
         Point endPoint = new Point(boundingBox.getMaxX(), startPoint.getYCoordinate());
-        return new LineSegment(startPoint, endPoint);
+        return LineSegment.create(startPoint, endPoint);
     }
 
     private boolean hasIntersection(LineSegment edge, LineSegment ray) {
