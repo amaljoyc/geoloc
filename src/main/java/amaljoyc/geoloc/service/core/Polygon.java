@@ -16,7 +16,6 @@ import java.util.List;
 public class Polygon {
 
     private List<LineSegment> edges;
-    private List<Point> vertices;
     private BoundingBox boundingBox;
 
     private Polygon() {
@@ -33,7 +32,6 @@ public class Polygon {
         validateVertices(vertices);
 
         Polygon polygon = new Polygon();
-        polygon.vertices = vertices;
 
         for (int i = 0; i < vertices.size() - 1; i++) {
             LineSegment lineSegment = LineSegment.create(vertices.get(i), vertices.get(i + 1));
@@ -64,6 +62,10 @@ public class Polygon {
      *         False --> Point is OUTSIDE the Polygon
      */
     public boolean contains(Point point) {
+        if (isOutsideBoundingBox(point)) {
+            return false;
+        }
+
         LineSegment ray = castRay(point);
         int totalIntersections = 0;
 
@@ -78,6 +80,13 @@ public class Polygon {
         }
 
         return totalIntersections % 2 != 0; // count of intersections is odd
+    }
+
+    private boolean isOutsideBoundingBox(Point point) {
+        return point.getXCoordinate() > boundingBox.getMaxX()
+                || point.getYCoordinate() > boundingBox.getMaxY()
+                || point.getXCoordinate() < boundingBox.getMinX()
+                || point.getYCoordinate() < boundingBox.getMinY();
     }
 
     private LineSegment castRay(Point startPoint) {

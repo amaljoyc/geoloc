@@ -1,5 +1,6 @@
 package amaljoyc.geoloc.service.core;
 
+import amaljoyc.geoloc.exception.IllegalPolygonException;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -102,5 +103,42 @@ public class PolygonTest {
         assertTrue(nonConvexPolygon.contains(testPointOnVertex));
 
         assertFalse(nonConvexPolygon.contains(testPointOutsideLeft));
+    }
+
+    @Test(expected = IllegalPolygonException.class)
+    public void testIllegalOpenPolygon() {
+        List<Point> vertices = Arrays.asList(
+                new Point(1.5, 5),
+                new Point(3.5, 2),
+                new Point(6, 2),
+                new Point(7.5, 5.5)
+        );
+
+        Polygon.create(vertices);
+    }
+
+    @Test(expected = IllegalPolygonException.class)
+    public void testLineSegmentAsIllegalPolygon() {
+        List<Point> vertices = Arrays.asList(
+                new Point(1.5, 5),
+                new Point(3.5, 2)
+        );
+
+        Polygon.create(vertices);
+    }
+
+    @Test
+    public void testTriangleWithPointOutsideBoundingBox() {
+        List<Point> vertices = Arrays.asList(
+                new Point(1.5, 1.5),
+                new Point(9.5, 1.5),
+                new Point(4, 6),
+                new Point(1.5, 1.5)
+        );
+        Polygon triangle = Polygon.create(vertices);
+
+        Point testPointOutsideBoundingBox = new Point(100, 101);
+
+        assertFalse(triangle.contains(testPointOutsideBoundingBox));
     }
 }
