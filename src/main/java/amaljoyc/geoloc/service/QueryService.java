@@ -1,5 +1,7 @@
 package amaljoyc.geoloc.service;
 
+import amaljoyc.geoloc.api.dto.overview.OverviewResponse;
+
 import java.util.List;
 
 /**
@@ -18,4 +20,9 @@ public interface QueryService {
      * @return the polygonId of the Polygon that contains the vehicle with given vin
      */
     String getPolygon(String vin);
+
+    /**
+     * @return a complete overview of the current Polygons & Vehicles and their relationships.
+     */
+    OverviewResponse getCurrentOverview();
 }
