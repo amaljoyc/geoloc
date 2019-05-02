@@ -1,6 +1,6 @@
 package amaljoyc.geoloc.api.util;
 
-import amaljoyc.geoloc.api.ErrorResponse;
+import amaljoyc.geoloc.api.dto.ErrorResponse;
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

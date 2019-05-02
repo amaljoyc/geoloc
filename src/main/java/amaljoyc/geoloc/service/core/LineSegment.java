@@ -12,7 +12,7 @@ import static java.lang.Math.min;
  *  Represents a LineSegment with fixed start and end Points
  */
 @Data
-public class LineSegment {
+public class LineSegment implements GeometryFigure {
 
     private Point startPoint;
     private Point endPoint;

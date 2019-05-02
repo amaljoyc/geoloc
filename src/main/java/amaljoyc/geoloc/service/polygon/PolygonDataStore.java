@@ -1,6 +1,7 @@
 package amaljoyc.geoloc.service.polygon;
 
 import amaljoyc.geoloc.service.core.Point;
+import amaljoyc.geoloc.service.core.Polygon;
 import amaljoyc.geoloc.service.polygon.dump.Geometry;
 import amaljoyc.geoloc.service.polygon.dump.PolygonDataDump;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by amaljoyc on 01.05.19.
@@ -23,7 +26,12 @@ import java.util.List;
 public class PolygonDataStore {
 
     private static final String POLYGON_TYPE = "Polygon";
-    private List<PolygonData> polygonDataCache;
+
+    /*
+        key   --> polygonId
+        value --> Polygon
+     */
+    private Map<String, Polygon> polygonDataCache;
 
     @Value("${polygon.dataDump.location}")
     Resource polygonDumpFile;
@@ -44,7 +52,7 @@ public class PolygonDataStore {
     }
 
     private void transformAndStoreData(List<PolygonDataDump> dataDump) {
-        polygonDataCache = new ArrayList<>();
+        polygonDataCache = new HashMap<>();
 
         dataDump.forEach(data -> {
             Geometry geometry = data.getGeometry();
@@ -55,12 +63,12 @@ public class PolygonDataStore {
                     vertices.add(new Point(coordinate[0], coordinate[1]));
                 }
 
-                polygonDataCache.add(new PolygonData(data.getId(), vertices));
+                polygonDataCache.put(data.getId(), Polygon.create(vertices));
             }
         });
     }
 
-    public List<PolygonData> getPolygons() {
+    public Map<String, Polygon> getPolygons() {
         return polygonDataCache;
     }
 }

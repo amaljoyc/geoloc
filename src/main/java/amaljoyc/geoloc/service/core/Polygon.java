@@ -13,7 +13,7 @@ import java.util.List;
  *  Represents a Polygon with a list of LineSegments as its edges.
  */
 @Data
-public class Polygon {
+public class Polygon implements GeometryFigure {
 
     private List<LineSegment> edges;
     private BoundingBox boundingBox;
