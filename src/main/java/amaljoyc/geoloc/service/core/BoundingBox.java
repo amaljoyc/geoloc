@@ -18,6 +18,10 @@ public class BoundingBox {
     private double minY = Double.MAX_VALUE;
     private double maxY = -Double.MAX_VALUE;
 
+    /**
+     * adjusts BoundingBox size / volume based on each new vertex
+     * @param vertex
+     */
     public void resizeAfterVertex(Point vertex) {
         minX = min(minX, vertex.getXCoordinate());
         maxX = max(maxX, vertex.getXCoordinate());

@@ -29,8 +29,11 @@ public class VehicleDataRefresher {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * scheduled to run with a configured delay and calls the external vehicles api to get latest vehicles location
+     */
     @Scheduled(fixedDelayString = "${vehicle.dataRefresh.delayInMillis}")
-    public void refresh() {
+    private void refresh() {
         log.info("Starting vehicle data refresh...");
 
         try {

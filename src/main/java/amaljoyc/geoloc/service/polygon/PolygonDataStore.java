@@ -28,6 +28,10 @@ public class PolygonDataStore {
     @Value("${polygon.dataDump.location}")
     Resource polygonDumpFile;
 
+    /**
+     * fills up the polygonDataCache from a json dump file upon application startup
+     * @throws IOException
+     */
     @PostConstruct
     private void init() throws IOException {
         log.info("Loading the polygon data dump: " + polygonDumpFile.getFilename());

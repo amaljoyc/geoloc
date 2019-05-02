@@ -17,6 +17,10 @@ public class VehicleDataStore {
 
     private List<VehicleData> vehicleDataCache;
 
+    /**
+     * updates the vehicleDataCache with new vehicles location
+     * @param externalData
+     */
     public void updateStore(List<ExternalVehicleData> externalData) {
         List<VehicleData> vehicles = new ArrayList<>();
 
