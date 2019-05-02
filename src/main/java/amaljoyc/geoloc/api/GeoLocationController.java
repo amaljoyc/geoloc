@@ -4,7 +4,6 @@ import amaljoyc.geoloc.api.dto.ErrorResponse;
 import amaljoyc.geoloc.api.dto.PolygonResponse;
 import amaljoyc.geoloc.api.dto.VehiclesResponse;
 import amaljoyc.geoloc.service.QueryService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -24,7 +23,6 @@ import static amaljoyc.geoloc.api.util.SwaggerConstants.*;
  */
 @RestController
 @RequestMapping("/v1")
-@Api("/v1")
 @Slf4j
 public class GeoLocationController {
 
@@ -32,12 +30,12 @@ public class GeoLocationController {
     private QueryService queryService;
 
     @GetMapping("/cars/{polygonId}")
-    @ApiOperation(value = "Get all cars present inside a polygon with given polygonId",
+    @ApiOperation(value = "Get all cars present inside a polygon of given polygonId",
             response = VehiclesResponse.class)
     @ApiResponses(value = {
-            @ApiResponse(code = HTTP_STATUS_200, message = "List of VINs corresponding to each car",
+            @ApiResponse(code = HTTP_STATUS_200, message = "Returns a List of VINs corresponding to each car",
                     response = VehiclesResponse.class),
-            @ApiResponse(code = HTTP_STATUS_404, message = "Polygon Not Found for id: <polygonId>",
+            @ApiResponse(code = HTTP_STATUS_404, message = "Polygon Not Found for given polygonId",
                     response = ErrorResponse.class),
             @ApiResponse(code = HTTP_STATUS_500, message = "Server Error",
                     response = ErrorResponse.class)
@@ -49,12 +47,12 @@ public class GeoLocationController {
     }
 
     @GetMapping("/polygon/{vin}")
-    @ApiOperation(value = "Get the polygon which contains the car with given VIN",
+    @ApiOperation(value = "Get the polygon which contains the car of given VIN",
             response = PolygonResponse.class)
     @ApiResponses(value = {
-            @ApiResponse(code = HTTP_STATUS_200, message = "The polygonId corresponding to the polygon",
+            @ApiResponse(code = HTTP_STATUS_200, message = "Returns the polygonId corresponding to the polygon",
                     response = PolygonResponse.class),
-            @ApiResponse(code = HTTP_STATUS_404, message = "Vehicle Not Found for VIN: <vin>",
+            @ApiResponse(code = HTTP_STATUS_404, message = "Vehicle Not Found for given VIN",
                     response = ErrorResponse.class),
             @ApiResponse(code = HTTP_STATUS_500, message = "Server Error",
                     response = ErrorResponse.class)
