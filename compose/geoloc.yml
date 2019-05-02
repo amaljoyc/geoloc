@@ -1,0 +1,35 @@
+version: '3.1'
+
+networks:
+  net-geoloc:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.178.0.0/24
+
+services:
+
+  external-vehicle-api:
+    container_name: external-vehicle-api
+    hostname: external-vehicle-api
+    image: "car2godeveloper/api-for-coding-challenge"
+    networks:
+      net-geoloc:
+        ipv4_address: 192.178.0.100
+    ports:
+      - 3000:3000
+
+  geoloc:
+    container_name: geoloc
+    hostname: geoloc
+    image: "geoloc:latest"
+    environment:
+      - PORT=7200
+      - VEHICLE_API_HOST=external-vehicle-api
+    networks:
+      net-geoloc:
+        ipv4_address: 192.178.0.200
+    depends_on:
+      - external-vehicle-api
+    ports:
+      - 7200:7200

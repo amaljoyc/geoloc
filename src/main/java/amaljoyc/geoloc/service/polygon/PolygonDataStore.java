@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class PolygonDataStore {
     private Map<String, Polygon> polygonDataCache;
 
     @Value("${polygon.dataDump.location}")
-    Resource polygonDumpFile;
+    String polygonDumpFileLocation;
 
     /**
      * fills up the polygonDataCache from a json dump file upon application startup
@@ -42,10 +43,11 @@ public class PolygonDataStore {
      */
     @PostConstruct
     private void init() throws IOException {
+        Resource polygonDumpFile = new ClassPathResource(polygonDumpFileLocation);
         log.info("Loading the polygon data dump: " + polygonDumpFile.getFilename());
         ObjectMapper mapper = new ObjectMapper();
         CollectionType dataType = mapper.getTypeFactory().constructCollectionType(List.class, PolygonDataDump.class);
-        List<PolygonDataDump> polygonDataDump = mapper.readValue(polygonDumpFile.getFile(), dataType);
+        List<PolygonDataDump> polygonDataDump = mapper.readValue(polygonDumpFile.getInputStream(), dataType);
 
         transformAndStoreData(polygonDataDump);
         log.info("Finished loading! total polygons = " + polygonDataCache.size());

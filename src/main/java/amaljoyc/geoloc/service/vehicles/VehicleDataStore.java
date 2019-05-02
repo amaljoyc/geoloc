@@ -6,6 +6,7 @@ import amaljoyc.geoloc.service.vehicles.external.VehiclePosition;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,11 @@ public class VehicleDataStore {
         value --> location as Point
      */
     private Map<String, Point> vehicleDataCache;
+
+    @PostConstruct
+    private void init() {
+        vehicleDataCache = new HashMap<>();
+    }
 
     /**
      * updates the vehicleDataCache with new vehicles location
