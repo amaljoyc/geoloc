@@ -11,7 +11,7 @@ JAR_VERSION=1.0.0
 JAR_FILE=$PROJECT_NAME-$JAR_VERSION.jar
 COMPOSE_FILE=$DIR/compose/$PROJECT_NAME.yml
 
-run(){
+build() {
     $DIR/./mvnw clean install
 
     echo "removing old image '$DOCKER_IMAGE' inorder to build latest again"
@@ -21,30 +21,32 @@ run(){
     /bin/cp -f $TARGET_DIR/$JAR_FILE $DOCKER_DIR/$JAR_FILE
     touch $DOCKER_DIR/$PROJECT_NAME.log
     docker build -t $DOCKER_IMAGE $DOCKER_DIR
+}
 
-	docker-compose -p $PROJECT_NAME -f $COMPOSE_FILE up -d
-	echo "Sleepng for 3 seconds ..."
+run() {
+    docker-compose -p $PROJECT_NAME -f $COMPOSE_FILE up -d
+    echo "Sleepng for 3 seconds ..."
     sleep 3
 }
 
-stop(){
+stop() {
 	docker-compose -p $PROJECT_NAME -f $COMPOSE_FILE down
 }
 
-top(){
+top() {
 	docker-compose -p $PROJECT_NAME -f $COMPOSE_FILE top
 }
 
-tail(){
+tail() {
 	NAME=$1
 	docker-compose -p $PROJECT_NAME -f $COMPOSE_FILE logs -f $NAME
 }
 
-list(){
+list() {
 	docker-compose -p $PROJECT_NAME -f $COMPOSE_FILE config --services
 }
 
-status(){
+status() {
 	docker-compose -p $PROJECT_NAME -f $COMPOSE_FILE ps
 }
 
@@ -52,6 +54,10 @@ status(){
 OPTION=$1
 
 case $OPTION in
+build)
+    echo "Building docker image for ${PROJECT_NAME}"
+    build
+    ;;
 run)
     echo "Running containers for ${PROJECT_NAME} in detached mode"
     run
@@ -74,8 +80,9 @@ status)
 	status
 	;;
 *)
-    echo "Did you forget something!! [ run | stop | list | tail | status | display ]"
+    echo "Did you forget something!! [ build | run | stop | list | tail | status | display ]"
     echo "-- Options --"
+    echo "build : Builds the docker image for ${PROJECT_NAME}"
     echo "run : Runs the complete container in detached mode"
     echo "stop : Stops and remove the complete container"
     echo "list : List all the services in the container"
