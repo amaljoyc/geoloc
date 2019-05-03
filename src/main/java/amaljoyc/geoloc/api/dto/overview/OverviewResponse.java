@@ -1,6 +1,7 @@
 package amaljoyc.geoloc.api.dto.overview;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode
 public class OverviewResponse {
 
     private List<PolygonVehiclesMap> carsInsidePolygon;
